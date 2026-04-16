@@ -68,14 +68,11 @@ Or it can be run with three arguments -- the path to a ROM file, a starting loca
     Region Light World Overworld                                     -----> go                             -----> Outside Lumberjack House
     Outside Lumberjack House                                         -----> Enter                          -----> Inside Potion Shop
 
-## Known Issues
+## Known Issue
 
-1. It occasionally confuses a couple Light World locations with their Dark World counterparts (and vice versa):
-   1. Light World Death Mountain exit ledge and bumper cave top exit,
-   2. Eastern Palace and Palace of Darkness.
-2. Some shops and large fairy fountains may be incorrectly identified.
+- Some shops and large fairy fountains may be incorrectly identified.
 
-Hopefully I can get those fixed.
+There are several interior areas that I've only been able to identify by tileset, not specific location. It's not super important, but I'd like to fix it.
 
 ## Future
 
@@ -83,8 +80,9 @@ Things this application doesn't do/have, but I would one day like for it to do/h
 
 1. Have more Light World and Dark World overworld region granularity, to potentially avoid paths requiring you to traverse large sections of the overworld unnecessarily.
 2. Allow you to specify what items you do/don't have and have connections between areas be conditional.
-3. Connect to Archipelago and simply your current inventory.
+3. Connect to Archipelago and simply fetch your current inventory.
 4. Have cleaner output. It's a little annoying to parse right now.
+5. Should probably, like, write some tests or something.
 
 ## Disclaimer
 

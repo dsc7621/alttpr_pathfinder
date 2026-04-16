@@ -561,13 +561,29 @@ static errno_t world_build_exit(
         return err;
     }
 
+    // Because a couple pairs of locations (e.g., Eastern Palace and Palace of Darkness) have the same vanilla VRAM
+    // location value, we must also read the overworld area value and compare against both values.
+    uint8_t vanilla_overworld_area_value;
+    err = file_read_uint8(
+        rom,
+        vanilla_interior_exit->overworld_area_offset,
+        &vanilla_overworld_area_value);
+    if (err) {
+        DPRINTF(
+            "Cannot read 8-bit value at offset 0x%x for exit (with vanilla name) %s.\n",
+            vanilla_interior_exit->overworld_area_offset,
+            vanilla_interior_exit->name);
+        return err;
+    }
+
     // Now find the exit whose vanilla VRAM location value matches what the ROM's VRAM location value is for
     // the paired exit we found. That's the true target exit.
     const interior_exit *rom_interior_exit = NULL;
     for (size_t j = 0; j < num_interior_exits; j++) {
         const interior_exit *temp_interior_exit = &interior_exits[j];
 
-        if (temp_interior_exit->vanilla_target_vram_location_value == vanilla_target_vram_location_value) {
+        if ((temp_interior_exit->vanilla_target_vram_location_value == vanilla_target_vram_location_value) &&
+            (temp_interior_exit->vanilla_overworld_area_value == vanilla_overworld_area_value)) {
             rom_interior_exit = temp_interior_exit;
             break;
         }
