@@ -1,13 +1,14 @@
 /**
- * queue.h
+ * deque.h
  * -------
- * Provides an interface for creating and interacting with a typical deque.
+ * Provides an interface for creating and interacting with a typical deque that stores size_t values.
  */
 
 #ifndef ALTTPR_PATHFINDER_DEQUE_H
 #define ALTTPR_PATHFINDER_DEQUE_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 /**
  * A typical deque.
@@ -24,7 +25,7 @@ typedef struct deque deque;
  *
  * @remark Caller is responsible for calling deque_free when done with the deque.
  */
-errno_t deque_create(
+int deque_create(
     deque **out_deque);
 
 /**
@@ -45,9 +46,9 @@ size_t deque_get_size(
  *     0 if successful,
  *     ENOMEM if space for the additional item cannot be allocated.
  */
-errno_t deque_enqueue_front(
+int deque_enqueue_front(
     deque *deque,
-    const void *item);
+    size_t item);
 
 /**
  * Enqueue new item into the back of the deque.
@@ -58,53 +59,53 @@ errno_t deque_enqueue_front(
  *     0 if successful,
  *     ENOMEM if space for the additional item cannot be allocated.
  */
-errno_t deque_enqueue_back(
+int deque_enqueue_back(
     deque *deque,
-    const void *item);
+    size_t item);
 
 /**
  * Look at the value at the front of the deque without removing it.
  *
  * @param deque The deque.
- * @param out_item After successful execution, will point to a pointer to the item at the front of the deque.
+ * @param out_item After successful execution, will point to the value of the item at the front of the deque.
  * @return true if the deque contained an item to peek at; false, otherwise.
  */
 bool deque_peek_front(
     const deque *deque,
-    const void **out_item);
+    size_t *out_item);
 
 /**
  * Look at the value at the back of the deque without removing it.
  *
  * @param deque The deque.
- * @param out_item After successful execution, will point to a pointer to the item at the back of the deque.
+ * @param out_item After successful execution, will point to the value of the item at the back of the deque.
  * @return true if the deque contained an item to peek at; false, otherwise.
  */
 bool deque_peek_back(
     const deque *deque,
-    const void **out_item);
+    size_t *out_item);
 
 /**
  * Look at and remove the value at the front of the deque.
  *
  * @param deque The deque.
- * @param out_item After successful execution, will point to a pointer to the item removed from the front of the deque.
+ * @param out_item After successful execution, will point to the value of the item removed from the front of the deque.
  * @return true if the deque contained an item to pop; false, otherwise.
  */
 bool deque_pop_front(
     deque *deque,
-    const void **out_item);
+    size_t *out_item);
 
 /**
  * Look at and remove the value at the back of the deque.
  *
  * @param deque The deque.
- * @param out_item After successful execution, will point to a pointer to the item removed from the back of the deque.
+ * @param out_item After successful execution, will point to the value of the item removed from the back of the deque.
  * @return true if the deque contained an item to pop; false, otherwise.
  */
 bool deque_pop_back(
     deque *deque,
-    const void **out_item);
+    size_t *out_item);
 
 /**
  * Frees up resources allocated for the deque.

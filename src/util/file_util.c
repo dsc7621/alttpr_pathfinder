@@ -8,7 +8,7 @@
 
 #include "file_util.h"
 
-errno_t file_read_uint8(
+int file_read_uint8(
     FILE *file,
     long offset,
     uint8_t *out) {
@@ -28,7 +28,7 @@ errno_t file_read_uint8(
     return 0;
 }
 
-errno_t file_read_le_uint16(
+int file_read_le_uint16(
     FILE *file,
     long offset,
     uint16_t *out) {

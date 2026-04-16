@@ -28,9 +28,9 @@ typedef struct location location;
  * @param rom A The Legend of Zelda: A Link to the Past (JP v1.0) ROM file.
  * @return 0 if successful; an error code, otherwise.
  *
- * @note If successful, the caller is responsible for calling <tt>world_free</tt> when done with the world.
+ * @note If successful, the caller is responsible for calling world_free when done with the world.
  */
-errno_t world_build(
+int world_build(
     world **out_world,
     const char *rom_filename,
     FILE *rom);
@@ -52,7 +52,7 @@ const char *world_get_rom_filename(
  * @param target_location_name The name of the target location.
  * @return 0 if successful; an error code, otherwise.
  */
-errno_t world_print_path(
+int world_print_path(
     const world *world,
     const char *start_location_name,
     const char *target_location_name);
@@ -65,7 +65,7 @@ errno_t world_print_path(
  * @param target_location_name The name of the target location.
  * @return 0 if successful; an error code, otherwise.
  */
-errno_t world_print_starter_paths(
+int world_print_starter_paths(
     const world *world,
     const char *target_location_name);
 

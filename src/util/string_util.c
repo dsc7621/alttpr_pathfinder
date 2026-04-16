@@ -6,11 +6,12 @@
 #include "string_util.h"
 
 #include <assert.h>
+#include <errno.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
-errno_t string_concat(
+int string_concat(
     const char *first,
     const char *second,
     char **out) {

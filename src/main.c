@@ -20,7 +20,7 @@ enum menu_choice {
     CHOICE_QUIT,
 };
 
-static errno_t try_build_world(
+static int try_build_world(
     const char *file_path,
     world **out_world);
 
@@ -44,7 +44,7 @@ static void handle_list_locations();
 int main(
     int argc,
     char **argv) {
-    errno_t err = 0;
+    int err = 0;
     world *world = NULL;
 
     // Handle single-run command-line mode.
@@ -107,10 +107,10 @@ cleanup:
 /**
  * Load the file at the given path and try to build a world from it.
  */
-static errno_t try_build_world(
+static int try_build_world(
     const char *file_path,
     world **out_world) {
-    errno_t err;
+    int err;
 
     if (*out_world) {
         world_free(*out_world);
@@ -205,7 +205,7 @@ static enum menu_choice print_menu_and_get_choice(
  */
 static void fgets_with_retry(
     char *buf) {
-    const errno_t err = fflush(stdin);
+    const int err = fflush(stdin);
     if (err) {
         DPRINTF("Got %d from fflush.\n", err);
 
@@ -237,7 +237,7 @@ static void handle_load_rom(
 
     bool trying = true;
     while (trying) {
-        const errno_t err = try_build_world(buf, out_world);
+        const int err = try_build_world(buf, out_world);
         if (err) {
             printf("Try again: ");
             fgets_with_retry(buf);

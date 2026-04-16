@@ -15,6 +15,9 @@ add_executable(alttpr_pathfinder src/main.c
         src/util/macros.h
         src/deque.h
         src/deque.c
+        src/world_ops.c
+        src/world_impl.h
+        src/world_impl.c
 )
 
 target_compile_definitions(alttpr_pathfinder PRIVATE

@@ -5,26 +5,30 @@
  */
 
 #include <assert.h>
+#include <errno.h>
 #include <stddef.h>
 #include <stdlib.h>
 
 #include "deque.h"
+#include "util/macros.h"
 
 struct deque {
-    const void **items;
-    ssize_t num_items;
-    ssize_t capacity;
-    ssize_t head;
-    ssize_t one_past_tail;
+    size_t *items;
+    size_t num_items;
+    size_t capacity;
+    size_t head;
+    size_t one_past_tail;
 };
 
-static errno_t deque_increase_capacity(
+static int deque_increase_capacity(
     deque *deque);
 
-errno_t deque_create(
+int deque_create(
     deque **out_deque) {
     deque *tmp = calloc(1, sizeof(deque));
+
     if (!tmp) {
+        DPRINTF("Calloc failed.\n");
         return ENOMEM;
     }
 
@@ -40,13 +44,13 @@ size_t deque_get_size(
     return deque->num_items;
 }
 
-errno_t deque_enqueue_front(
+int deque_enqueue_front(
     deque *deque,
-    const void *item) {
+    const size_t item) {
     assert(deque != NULL);
 
     // Resize if necessary.
-    errno_t err = deque_increase_capacity(deque);
+    int err = deque_increase_capacity(deque);
     if (err) return err;
 
     deque->head = (deque->head - 1 + deque->capacity) % deque->capacity;
@@ -56,13 +60,13 @@ errno_t deque_enqueue_front(
     return 0;
 }
 
-errno_t deque_enqueue_back(
+int deque_enqueue_back(
     deque *deque,
-    const void *item) {
+    const size_t item) {
     assert(deque != NULL);
 
     // Resize if necessary.
-    errno_t err = deque_increase_capacity(deque);
+    int err = deque_increase_capacity(deque);
     if (err) return err;
 
     deque->items[deque->one_past_tail] = item;
@@ -72,19 +76,22 @@ errno_t deque_enqueue_back(
     return 0;
 }
 
-static errno_t deque_increase_capacity(
+static int deque_increase_capacity(
     deque *deque) {
     if (deque->num_items < deque->capacity) {
         return 0;
     }
 
-    const ssize_t new_capacity = (deque->capacity > 0) ? (deque->capacity * 2) : 10;
+    const size_t new_capacity = (deque->capacity > 0) ? (deque->capacity * 2) : 10;
 
-    const void **tmp = calloc(1, new_capacity * sizeof(void *));
-    if (!tmp) return ENOMEM;
+    size_t *tmp = calloc(1, new_capacity * sizeof(size_t));
+    if (!tmp) {
+        DPRINTF("Calloc failed.\n");
+        return ENOMEM;
+    }
 
     // Copy items into the new list, reset head and tail.
-    for (ssize_t i = 0; i < deque->num_items; i++) {
+    for (size_t i = 0; i < deque->num_items; i++) {
         tmp[i] = deque->items[(deque->head + i) % deque->capacity];
     }
 
@@ -100,7 +107,7 @@ static errno_t deque_increase_capacity(
 
 bool deque_peek_front(
     const deque *deque,
-    const void **out_item) {
+    size_t *out_item) {
     assert(deque != NULL);
 
     if (deque->num_items == 0) {
@@ -114,7 +121,7 @@ bool deque_peek_front(
 
 bool deque_peek_back(
     const deque *deque,
-    const void **out_item) {
+    size_t *out_item) {
     assert(deque != NULL);
 
     if (deque->num_items == 0) {
@@ -128,7 +135,7 @@ bool deque_peek_back(
 
 bool deque_pop_front(
     deque *deque,
-    const void **out_item) {
+    size_t *out_item) {
     assert(deque != NULL);
 
     if (deque->num_items == 0) {
@@ -145,14 +152,14 @@ bool deque_pop_front(
 
 bool deque_pop_back(
     deque *deque,
-    const void **out_item) {
+    size_t *out_item) {
     assert(deque != NULL);
 
     if (deque->num_items == 0) {
         return false;
     }
 
-    const ssize_t target = (deque->one_past_tail - 1 + deque->capacity) % deque->capacity;
+    const size_t target = (deque->one_past_tail - 1 + deque->capacity) % deque->capacity;
 
     *out_item = deque->items[target];
 

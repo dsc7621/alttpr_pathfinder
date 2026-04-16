@@ -16,8 +16,8 @@
  * although several exterior regions allow one-way traversal to other exterior regions (e.g., jumping off the Light
  * World Death Mountain Return Ledge region into the general Light World region).
  *
- * @remark Abbreviations here: <tt>EXT</tt> (exterior), <tt>INT</tt> (interior), <tt>LW</tt> (Light World),
- * <tt>DW</tt> (Dark World).
+ * @remark Abbreviations here: EXT (exterior), INT (interior), LW (Light World),
+ * DW (Dark World).
  *
  * @remark It is currently assumed that regions are freely traversable, even though this is sometimes
  * limited by items (e.g., needing a hammer and/or hookshot and/or tier-two glove to move freely through
@@ -117,7 +117,7 @@ static const int hole_target_offset_unused = -1;
 
 /**
  * An entrance. Best thought of as a spot <em>just inside</em> a location; that is, "after taking this entrance, Link
- * will be just inside location <tt>name</tt>."
+ * will be just inside location name."
  */
 typedef struct entrance {
     /**
@@ -131,7 +131,7 @@ typedef struct entrance {
     int target_offset;
 
     /**
-     * The value at <tt>target_offset</tt> in a vanilla ALttP ROM (JP v1.0).
+     * The value at target_offset in a vanilla ALttP ROM (JP v1.0).
      *
      * @remark This seems to identify the target <em>tileset</em>, not the specific location.
      */
@@ -139,13 +139,13 @@ typedef struct entrance {
 
     /**
      * The exterior region to which this entrance belongs in a vanilla ALttP ROM (JPv1.0). For example, the vanilla
-     * "Desert Palace Entrance (South)" entrance belongs to the <tt>REGION_EXT_LW_OVERWORLD</tt> exterior region.
+     * "Desert Palace Entrance (South)" entrance belongs to the REGION_EXT_LW_OVERWORLD exterior region.
      */
     enum region vanilla_exterior_region;
 
     /**
      * The interior region to which this entrance's target belongs in a vanilla ALttP ROM (JP v1.0). For example, the
-     * vanilla "Desert Palace Entrance (South)" entrance belongs to the <tt>REGION_INT_LW_DESERT_PALACE_FIRST_PART</tt>
+     * vanilla "Desert Palace Entrance (South)" entrance belongs to the REGION_INT_LW_DESERT_PALACE_FIRST_PART
      * interior region.
      */
     enum region vanilla_interior_region;
@@ -153,9 +153,9 @@ typedef struct entrance {
 
 /**
  * An exit. Best thought of as a spot in the overworld <em>just outside</em> a location; that is, "after taking this exit,
- * Link will be just outside location <tt>name</tt>."
+ * Link will be just outside location name."
  *
- * @remark This is named <tt>interior_exit</tt> to discourage naming individual exits <tt>exit</tt>, which is, unfortunately,
+ * @remark This is named interior_exit to discourage naming individual exits exit, which is, unfortunately,
  * the name of a global C function.
  */
 typedef struct interior_exit {
@@ -176,26 +176,26 @@ typedef struct interior_exit {
     int target_vram_location_offset;
 
     /**
-     * The value at <tt>overworld_area_offset</tt> in a vanilla ALttP ROM (JP v1.0).
+     * The value at overworld_area_offset in a vanilla ALttP ROM (JP v1.0).
      */
     uint8_t vanilla_overworld_area_value;
 
     /**
-     * The value at <tt>target_vram_location_offset</tt> in a vanilla ALttP ROM (JP v1.0).
+     * The value at target_vram_location_offset in a vanilla ALttP ROM (JP v1.0).
      *
      * @remark This value serves as a unique identifier for an exit. For example, if we load up a ROM and look at the
-     * <tt>target_vram_location_offset</tt> for the "Ice Palace" exit, and the value we find there matches the
-     * <tt>vanilla_target_vram_location_value</tt> for the "Spectacle Rock Cave (Top)" exit, we know that exiting the Ice
+     * target_vram_location_offset for the "Ice Palace" exit, and the value we find there matches the
+     * vanilla_target_vram_location_value for the "Spectacle Rock Cave (Top)" exit, we know that exiting the Ice
      * Palace will put us right outside of Spectacle Rock Cave (Top).
      */
     uint16_t vanilla_target_vram_location_value;
 
     /**
      * The exterior region to which this exit's target belongs in a vanilla ALttP ROM (JP v1.0). For example, the
-     * vanilla "Misery Mire" exit belongs to the <tt>REGION_EXT_DW_MIRE</tt> region.
+     * vanilla "Misery Mire" exit belongs to the REGION_EXT_DW_MIRE region.
      *
-     * @remark Unlike <tt>entrance</tt>s, <tt>interior_exit</tt>s do not have both exterior and interior regions;
-     * every single <tt>interior_exit</tt> has a paired <tt>entrance</tt>, whose interior region can be used, and
+     * @remark Unlike entrances, interior_exits do not have both exterior and interior regions;
+     * every single interior_exit has a paired entrance, whose interior region can be used, and
      * the vast majority of interior regions are isolated anyway.
      */
     enum region vanilla_exterior_region;
@@ -203,8 +203,8 @@ typedef struct interior_exit {
 
 /**
  * A hole. This should be thought of as a spot in the overworld <em>just outside</em> a hole into which Link can fall;
- * that is, "jumping through the hole at <tt>name</tt> will take Link to the target identified by
- * <tt>vanilla_target_value</tt>."
+ * that is, "jumping through the hole at name will take Link to the target identified by
+ * vanilla_target_value."
  */
 typedef struct hole {
     /**
@@ -214,14 +214,14 @@ typedef struct hole {
 
     /**
      * The ROM offsets at which to find the hole's target. Some holes have two offsets; if a hole has only one offset,
-     * the second will be <tt>hole_target_offset_unused</tt>.
+     * the second will be hole_target_offset_unused.
      *
      * @remark I am unsure why some holes have two offsets.
      */
     int target_offsets[2];
 
     /**
-     * The value at all used offsets in <tt>target_offsets</tt> in a vanilla ALttP ROM (JP v1.0).
+     * The value at all used offsets in target_offsets in a vanilla ALttP ROM (JP v1.0).
      *
      * @remark This value identifies an entrance, but not uniquely; interior locations that use the same tileset (e.g.,
      * various shops, healer fairy caves, etc.) share the same value here.
@@ -242,7 +242,7 @@ typedef struct hole {
 
     /**
      * The exterior region in which this hole is located in a vanilla ALttP ROM (JP v1.0). For example, the "Kakariko
-     * Well Drop" is in the <tt>REGION_EXT_LW_OVERWORLD</tt> region.
+     * Well Drop" is in the REGION_EXT_LW_OVERWORLD region.
      */
     enum region vanilla_region;
 } hole;
@@ -262,7 +262,7 @@ typedef struct region_link {
     enum region destination_region;
 
     /**
-     * The method by which Link moves from <tt>origin_region</tt> to <tt>destination_region</tt>.
+     * The method by which Link moves from origin_region to destination_region.
      */
     const char *method;
 } region_link;
@@ -278,12 +278,12 @@ typedef struct location_link {
     const char *name;
 
     /**
-     * The entrance, represented as an offset (index) of <tt>entrances</tt>.
+     * The entrance, represented as an offset (index) of entrances.
      */
     size_t entrances_offset;
 
     /**
-     * The exit, represent as an offset (index) of <tt>interior_exits</tt>.
+     * The exit, represent as an offset (index) of interior_exits.
      */
     size_t interior_exits_offset;
 } location_link;
@@ -294,7 +294,7 @@ typedef struct location_link {
 extern const entrance entrances[];
 
 /**
- * The number of elements in <tt>entrances</tt>.
+ * The number of elements in entrances.
  */
 extern const size_t num_entrances;
 
@@ -304,7 +304,7 @@ extern const size_t num_entrances;
 extern const interior_exit interior_exits[];
 
 /**
- * The number of elements in <tt>interior_exits</tt>.
+ * The number of elements in interior_exits.
  */
 extern const size_t num_interior_exits;
 
@@ -314,7 +314,7 @@ extern const size_t num_interior_exits;
 extern const hole holes[];
 
 /**
- * The number of elements in <tt>holes</tt>.
+ * The number of elements in holes.
  */
 extern const size_t num_holes;
 
@@ -324,7 +324,7 @@ extern const size_t num_holes;
 extern const region_link region_links[];
 
 /**
- * The number of elements in <tt>region_links</tt>.
+ * The number of elements in region_links.
  */
 extern const size_t num_region_links;
 
@@ -339,7 +339,7 @@ extern const size_t num_region_links;
 extern const location_link location_links[];
 
 /**
- * The number of elements in <tt>location_links</tt>.
+ * The number of elements in location_links.
  */
 extern const size_t num_location_links;
 
