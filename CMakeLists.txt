@@ -21,5 +21,6 @@ add_executable(alttpr_pathfinder src/main.c
 )
 
 target_compile_definitions(alttpr_pathfinder PRIVATE
-        $<$<CONFIG:Debug>:DEBUG=0>
+        $<$<CONFIG:Debug>:DEBUG>
+        $<$<CONFIG:Release>:NDEBUG>
 )

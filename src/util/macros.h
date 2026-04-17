@@ -7,7 +7,7 @@
 #define ALTTPR_PATHFINDER_MACROS_H
 
 // Debug print macro.
-#if defined(DEBUG) && DEBUG == 1
+#ifdef DEBUG
     #define DPRINTF(fmt, ...) \
         printf("[DEBUG] %s:%d " fmt, __FILE__, __LINE__, ##__VA_ARGS__);
 #else
