@@ -7,8 +7,8 @@
  * https://github.com/ArchipelagoMW/Archipelago/tree/main/worlds/alttp, especially EntranceShuffle.py and Rom.py.
  *
  * Those partially generated tables were then used to run a script against a vanilla ALttP (JP v1.0) ROM to generate
- * the full tables. Region properties and the region_links table were added manually to support a clustered graph
- * structure without needing to create tons of connections between overworld areas and entrances.
+ * the full tables. Region properties and the region_links table were added manually to support region-to-region
+ * connections.
  */
 
 #include "locations.h"

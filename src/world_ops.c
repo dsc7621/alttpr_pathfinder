@@ -214,36 +214,70 @@ static void print_path_parts(
     if (path_parts == NULL) return;
     if (num_path_parts == 0) return;
 
-    printf("\nStart: %s %s", path_parts[0].to_location_placement, path_parts[0].to_location_name);
-
-    // Find the longest traversal method used.
+    // Find the longest traversal method and location name used.
     size_t max_traversal_method_length = 0;
+    size_t max_location_name_length = 0;
+
     for (size_t i = 0; i < num_path_parts; i++) {
         const path_part *curr_path_part = &path_parts[i];
 
-        const size_t traversal_method_length = curr_path_part->traversal_method
-            ? strlen(curr_path_part->traversal_method)
-            : 0;
+        // Ignore NULL traversal methods for size considerations; this doesn't actually indicate traversal but
+        // simply an acknowledgement that a location is in a region (and that region will be printed on the same
+        // line).
+        if (!curr_path_part->traversal_method) {
+            continue;
+        }
 
+        const size_t traversal_method_length = strlen(curr_path_part->traversal_method);
         if (traversal_method_length > max_traversal_method_length) {
             max_traversal_method_length = traversal_method_length;
         }
+
+        const size_t location_name_length =
+            strlen(curr_path_part->to_location_name) + strlen(curr_path_part->to_location_placement) + 1;
+        if (location_name_length > max_location_name_length) {
+            max_location_name_length = location_name_length;
+        }
     }
 
-    // Print the path.
+    // The starting path part prints in a dedicated format.
+    char start_buf[512];
+    snprintf(
+        start_buf,
+        sizeof(start_buf),
+        "Start: %s %s",
+        path_parts[0].to_location_placement,
+        path_parts[0].to_location_name);
+
+    // The +13 here is +4 characters for the indentation on subsequent lines, +5 characters for " --> " between traversal
+    // method and location name, +4 for spaces between location name and region.
+    printf(
+        "\n%-*s",
+        (int)max_traversal_method_length + (int)max_location_name_length + 13,
+        start_buf);
+
+    // Print the remainder of the path.
     for (size_t i = 1; i < num_path_parts; i++) {
         const path_part *curr_path_part = &path_parts[i];
 
         if (!curr_path_part->traversal_method) {
-            printf(" [in region %s]", curr_path_part->to_location_name);
+            printf("[in region %s]", curr_path_part->to_location_name);
         }
         else {
-            printf(
-                "\n%*s --> %s %s",
-                (int)max_traversal_method_length + 4,
-                curr_path_part->traversal_method,
+            char buf[512];
+            snprintf(
+                buf,
+                sizeof(buf),
+                "%s %s",
                 curr_path_part->to_location_placement,
                 curr_path_part->to_location_name);
+
+            printf(
+                "\n%*s --> %-*s",
+                (int)max_traversal_method_length + 4,
+                curr_path_part->traversal_method,
+                (int)max_location_name_length + 4,
+                buf);
         }
     }
 
