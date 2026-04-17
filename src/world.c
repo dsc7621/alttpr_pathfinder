@@ -221,7 +221,7 @@ int world_build(
 
     *out_world = NULL;
 
-    int err;
+    int err = 0;
 
     world *world = calloc(1, sizeof(struct world));
     if (!world) return ENOMEM;
@@ -695,22 +695,30 @@ static void world_set_special_location(
         return;
     }
 
-    if ((strcmp(location->name, "Links House") == 0) && (location->placement == PLACEMENT_INTERIOR)) {
+    if ((strcmp(location->name, "Links House") == 0) &&
+        (location->placement == PLACEMENT_INTERIOR) &&
+        !world->inside_links_house) {
         world->inside_links_house = location;
         return;
     }
 
-    if ((strcmp(location->name, "Sanctuary") == 0) && (location->placement == PLACEMENT_INTERIOR)) {
+    if ((strcmp(location->name, "Sanctuary") == 0) &&
+        (location->placement == PLACEMENT_INTERIOR) &&
+        !world->inside_sanctuary) {
         world->inside_sanctuary = location;
         return;
     }
 
-    if ((strcmp(location->name, "Old Man House (Top)") == 0) && (location->placement == PLACEMENT_INTERIOR)) {
+    if ((strcmp(location->name, "Old Man House (Top)") == 0) &&
+        (location->placement == PLACEMENT_INTERIOR) &&
+        !world->inside_old_man_cave) {
         world->inside_old_man_cave = location;
         return;
     }
 
-    if ((strcmp(location->name, "Pyramid Hole") == 0) && (location->placement == PLACEMENT_EXTERIOR)) {
+    if ((strcmp(location->name, "Pyramid Hole") == 0) &&
+        (location->placement == PLACEMENT_EXTERIOR) &&
+        !world->on_pyramid) {
         world->on_pyramid = location;
     }
 }

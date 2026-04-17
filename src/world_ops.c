@@ -38,7 +38,7 @@ int world_print_path(
         start_location = world_get_non_region_location(world, PLACEMENT_EXTERIOR, start_location_name);
 
         if (!start_location) {
-            DPRINTF("Cannot find location %s.\n", start_location_name);
+            printf("Cannot find location %s.\n", start_location_name);
             return EINVAL;
         }
     }
@@ -48,7 +48,7 @@ int world_print_path(
         target_location = world_get_non_region_location(world, PLACEMENT_EXTERIOR, target_location_name);
 
         if (!target_location) {
-            DPRINTF("Cannot find location %s.\n", target_location_name);
+            printf("Cannot find location %s.\n", target_location_name);
             return EINVAL;
         }
     }

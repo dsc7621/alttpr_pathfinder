@@ -110,7 +110,7 @@ cleanup:
 static int try_build_world(
     const char *file_path,
     world **out_world) {
-    int err;
+    int err = 0;
 
     if (*out_world) {
         world_free(*out_world);
@@ -156,13 +156,8 @@ static enum menu_choice print_menu_and_get_choice(
             world_get_rom_filename(world));
 
         while (true) {
-            char buf[1];
-
-            const int num_read = scanf("%s", buf);
-            if (num_read != 1) {
-                printf("Try again.\n> ");
-                continue;
-            }
+            char buf[512];
+            fgets_with_retry(buf);
 
             switch (buf[0]) {
                 case '1': return CHOICE_LOAD_ROM;
@@ -182,13 +177,8 @@ static enum menu_choice print_menu_and_get_choice(
         "2.) Quit.\n> ");
 
     while (true) {
-        char buf[1];
-
-        const int num_read = scanf("%s", buf);
-        if (num_read != 1) {
-            printf("Try again: ");
-            continue;
-        }
+        char buf[512];
+        fgets_with_retry(buf);
 
         switch (buf[0]) {
             case '1': return CHOICE_LOAD_ROM;
@@ -204,24 +194,22 @@ static enum menu_choice print_menu_and_get_choice(
  * Call fgets (with a 512-char limit) until it's successful. Strip the newline character.
  */
 static void fgets_with_retry(
-    char *buf) {
-    const int err = fflush(stdin);
-    if (err) {
-        DPRINTF("Got %d from fflush.\n", err);
-
-        // We'll just straight up exit if we can't flush stdin.
-        exit(err);
-    }
-
-    bool trying = true;
-    while (trying) {
+    char buf[512]) {
+    while (true) {
         if (!fgets(buf, 512, stdin)) {
+            if (feof(stdin)) {
+                printf("Fatal error: EOF reached.\n");
+                exit(1);
+            }
+
             printf("Try again: ");
+
+            clearerr(stdin);
             continue;
         }
 
         buf[strcspn(buf, "\n")] = '\0';
-        trying = false;
+        return;
     }
 }
 
@@ -235,8 +223,7 @@ static void handle_load_rom(
     char buf[512];
     fgets_with_retry(buf);
 
-    bool trying = true;
-    while (trying) {
+    while (true) {
         const int err = try_build_world(buf, out_world);
         if (err) {
             printf("Try again: ");
@@ -245,7 +232,7 @@ static void handle_load_rom(
         }
 
         printf("Successfully constructed world from ROM at %s.\n", buf);
-        trying = false;
+        break;
     }
 }
 
@@ -260,7 +247,11 @@ static void handle_starting_locations_to_target(
     fgets_with_retry(buf);
 
     printf("\n");
-    world_print_starter_paths(world, buf);
+
+    int err = world_print_starter_paths(world, buf);
+    if (err) {
+        printf("Unable to print paths...got error code %d.\n", err);
+    }
 }
 
 /**
